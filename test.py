@@ -237,7 +237,7 @@ if __name__ == '__main__':
 
     def load_images():
         import glob
-        return glob.glob('data/Dark_test_Zero-DCE/res/*.png')
+        return glob.glob('data/CVFace/After_Zero-DCE/*.png')
 
     ''' Main Test '''
 
@@ -251,7 +251,7 @@ if __name__ == '__main__':
         os.makedirs(save_path)
 
     for idx, img_path in enumerate(img_list):
-        print('processing: ', idx)
+        print('processing: ', idx, img_path)
         t0 = time.time()
         # Load images       
         image = Image.open(img_path)
