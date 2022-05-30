@@ -30,7 +30,7 @@ class WIDERDetection(data.Dataset):
             num_faces = int(line[1])
             box = []
             label = []
-            for i in xrange(num_faces):
+            for i in range(num_faces):
                 x = float(line[2 + 5 * i])
                 y = float(line[3 + 5 * i])
                 w = float(line[4 + 5 * i])
@@ -57,6 +57,7 @@ class WIDERDetection(data.Dataset):
     def pull_item(self, index):
         while True:
             image_path = self.fnames[index]
+            image_path = image_path.replace('\\', '/')
             img = Image.open(image_path)
             if img.mode == 'L':
                 img = img.convert('RGB')

@@ -207,10 +207,12 @@ class DSFD(nn.Module):
                                for o in conf_pal2], 1)
 
         priorbox = PriorBox(size, features_maps, cfg, pal=1)
-        self.priors_pal1 = Variable(priorbox.forward(), volatile=True)
+        with torch.no_grad():
+            self.priors_pal1 = Variable(priorbox.forward())
 
         priorbox = PriorBox(size, features_maps, cfg, pal=2)
-        self.priors_pal2 = Variable(priorbox.forward(), volatile=True)
+        with torch.no_grad():
+            self.priors_pal2 = Variable(priorbox.forward())
 
         if self.phase == 'test':
             output = self.detect(
@@ -237,7 +239,9 @@ class DSFD(nn.Module):
             mdata = torch.load(base_file,
                                map_location=lambda storage, loc: storage)
             weights = mdata['weight']
+#             weights = mdata
             epoch = mdata['epoch']
+#             epoch = 107
             self.load_state_dict(weights)
             print('Finished!')
         else:

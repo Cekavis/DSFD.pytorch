@@ -1,0 +1,4 @@
+python train.py --batch_size 16 --lr 2e-5 --resume weights/vgg/dsfd_checkpoint.pth --multigpu True
+
+python test.py 0 2000
+CUDA_VISIBLE_DEVICES=1 python test.py 2000 4000

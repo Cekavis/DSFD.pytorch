@@ -156,11 +156,13 @@ def train():
         for batch_idx, (images, targets) in enumerate(train_loader):
             if args.cuda:
                 images = Variable(images.cuda())
-                targets = [Variable(ann.cuda(), volatile=True)
-                           for ann in targets]
+                with torch.no_grad():
+                    targets = [Variable(ann.cuda())
+                            for ann in targets]
             else:
                 images = Variable(images)
-                targets = [Variable(ann, volatile=True) for ann in targets]
+                with torch.no_grad():
+                    targets = [Variable(ann) for ann in targets]
 
             if iteration in cfg.LR_STEPS:
                 step_index += 1
@@ -177,7 +179,8 @@ def train():
             loss.backward()
             optimizer.step()
             t1 = time.time()
-            losses += loss.data[0]
+            # losses += loss.data[0]
+            losses += loss.item()
 
             if iteration % 10 == 0:
                 tloss = losses / (batch_idx + 1)
@@ -185,9 +188,9 @@ def train():
                 print('epoch:' + repr(epoch) + ' || iter:' +
                       repr(iteration) + ' || Loss:%.4f' % (tloss))
                 print('->> pal1 conf loss:{:.4f} || pal1 loc loss:{:.4f}'.format(
-                    loss_c_pal1.data[0], loss_l_pa1l.data[0]))
+                    loss_c_pal1.item(), loss_l_pa1l.item()))
                 print('->> pal2 conf loss:{:.4f} || pal2 loc loss:{:.4f}'.format(
-                    loss_c_pal2.data[0], loss_l_pa12.data[0]))
+                    loss_c_pal2.item(), loss_l_pa12.item()))
                 print('->>lr:{}'.format(optimizer.param_groups[0]['lr']))
 
             if iteration != 0 and iteration % 5000 == 0:
@@ -210,11 +213,13 @@ def val(epoch, net, dsfd_net, criterion):
     for batch_idx, (images, targets) in enumerate(val_loader):
         if args.cuda:
             images = Variable(images.cuda())
-            targets = [Variable(ann.cuda(), volatile=True)
+            with torch.no_grad():
+                targets = [Variable(ann.cuda())
                        for ann in targets]
         else:
             images = Variable(images)
-            targets = [Variable(ann, volatile=True) for ann in targets]
+            with torch.no_grad():
+                targets = [Variable(ann) for ann in targets]
 
         out = net(images)
         loss_l_pa1l, loss_c_pal1 = criterion(out[:3], targets)

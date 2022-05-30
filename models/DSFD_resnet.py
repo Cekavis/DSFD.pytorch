@@ -281,10 +281,12 @@ class DSFD(nn.Module):
         conf_pal2 = torch.cat([o.view(o.size(0), -1) for o in conf_pal2], 1)
 
         priorbox = PriorBox(size, features_maps, cfg, pal=1)
-        self.priors_pal1 = Variable(priorbox.forward(), volatile=True)
+        with torch.no_grad():
+            self.priors_pal1 = Variable(priorbox.forward())
 
         priorbox = PriorBox(size, features_maps, cfg, pal=2)
-        self.priors_pal2 = Variable(priorbox.forward(), volatile=True)
+        with torch.no_grad():
+            self.priors_pal2 = Variable(priorbox.forward())
 
         if self.phase == 'test':
             output = self.detect(

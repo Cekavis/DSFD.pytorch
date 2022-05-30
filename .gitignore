@@ -9,3 +9,8 @@ data/val.txt
 data/*.txt
 img/02*.jpg
 img/tj*.jpg
+
+data/WIDER
+data/Dark_test_Zero-DCE
+result/
+.vscode/

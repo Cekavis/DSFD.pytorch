@@ -10,7 +10,7 @@ from ..bbox_utils import decode, nms
 from torch.autograd import Function
 
 
-class Detect(Function):
+class Detect():
     """At test time, Detect is the final layer of SSD.  Decode location preds,
     apply non-maximum suppression to location predictions based on conf
     scores and threshold to a top_k number of output predictions for both
@@ -25,7 +25,7 @@ class Detect(Function):
         self.variance = cfg.VARIANCE
         self.nms_top_k = cfg.NMS_TOP_K
 
-    def forward(self, loc_data, conf_data, prior_data):
+    def __call__(self, loc_data, conf_data, prior_data):
         """
         Args:
             loc_data: (tensor) Loc preds from loc layers
